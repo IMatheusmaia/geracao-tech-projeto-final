@@ -9,6 +9,9 @@ spring:
   application:
     name : searcher
   ai:
+      google:
+        genai:
+          api-key: ${GOOGLE_GEMINI_API_KEY}
       client:
         enabled : true
         name : searcher-mcp-client
