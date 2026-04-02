@@ -1,9 +1,9 @@
-from browser_use import Agent, Browser, ChatGoogle
-import asyncio
+from tools import mcp
 
-async def main():
-    await asyncio.sleep(1)
-    print("Hello, World!")
+
+def main():
+    mcp.run(transport="streamable-http")
+
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

@@ -1,3 +1,4 @@
-asyncio
 browser-use
-flask
+mcp[cli]
+python-dotenv
+pydantic

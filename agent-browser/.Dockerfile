@@ -11,4 +11,6 @@ RUN pip3 install --break-system-packages -r requirements.txt
 
 COPY src/ .
 
+EXPOSE 8000
+
 CMD ["python3", "main.py"]
