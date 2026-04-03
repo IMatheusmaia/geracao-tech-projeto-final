@@ -1,0 +1,29 @@
+server:
+  port: 3030
+
+spring:
+  application:
+    name: searcher-app
+
+  main:
+    allow-bean-definition-overriding: true
+
+  mcp:
+    auth:
+      token: 461b9844ebe4805eef3fa62aa137397645a10ba209744de049bd91bf02b5f2c6
+    server:
+      url: http://localhost:8000/sse
+      
+  ai:
+    google:
+      genai:
+        api-key: AIzaSyCDvDgQ_pjEH-9I0WQDAjrl8jvIxqW2I-Y
+        client:
+          enabled: true
+          name: searcher-mcp-client
+          type: SYNC
+          request-timeout: 60s
+          sse:
+            connections:
+              server1:
+                url: http://localhost:8000/sse

@@ -1,4 +1,4 @@
-package com.agent.searcher.mcp.client;
+package com.agent.searcher.mcp.config;
 
 import io.modelcontextprotocol.client.transport.HttpClientSseClientTransport;
 import org.springframework.beans.factory.annotation.Value;
@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration(proxyBeanMethods = false)
-public class MCPClientConfig {
+public class MCPClientSettings {
 
-  @Value("${spring.config.mcp.server.url}")
+  @Value("${spring.mcp.server.url}")
   private String serverUrl;
 
   @Value("${spring.mcp.auth.token}")
@@ -16,7 +16,7 @@ public class MCPClientConfig {
 
   @Bean
   public HttpClientSseClientTransport mcpSseTransport() {
-    return HttpClientSseClientTransport.builder(this.serverUrl)
+    return HttpClientSseClientTransport.builder(serverUrl)
         .customizeRequest(requestBuilder ->
             requestBuilder.header("Authorization", "Bearer " + authToken))
         .build();
