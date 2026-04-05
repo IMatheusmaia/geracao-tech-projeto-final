@@ -11,6 +11,8 @@ import com.agent.searcher.model.prompts.DynamicPrompts;
 import com.agent.searcher.model.schema.OutputSchema;
 import com.agent.searcher.model.tools.ChatModelTools;
 
+import io.lettuce.core.RedisException;
+
 
 @Service
 public class ChatClientService {
@@ -29,14 +31,13 @@ public class ChatClientService {
     this.windowChatMemory = windowChatMemory;
   }
 
-  public OutputSchema getResponse(String userMessage, String chatId) {
-    var systemPrompt = new DynamicPrompts().system();
+  public OutputSchema getResponse(String userMessage, String chatId) throws RedisException, RuntimeException {
 
     List<Message> history = windowChatMemory.get(chatId);
 
     var output = chatClient
       .prompt()
-        .system(systemPrompt)
+        .system(new DynamicPrompts().system())
         .user(userMessage)
         .messages(history)
         .tools(tools)

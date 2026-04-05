@@ -18,7 +18,7 @@ services:
 
   chat-memory:
     container_name: neo4j
-    image: dhi.io/neo4j:5
+    image: neo4j:5.26.24-ubi9
     ports:
       - "9090:9090"
     environment:

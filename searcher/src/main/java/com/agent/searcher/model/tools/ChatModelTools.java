@@ -41,7 +41,7 @@ public class ChatModelTools {
     this.resumerService = resumerService;
   }
 
-  @Tool(description = "Tool que é disparada quando o conteúdo que o usuário está buscando está no banco de dados vetorial (contexto RAG)", name = "redirectToDB", returnDirect = false, resultConverter = DefaultToolCallResultConverter.class)
+  @Tool(description = "Tool que é disparada quando o conteúdo que o usuário está buscando está no banco de dados vetorial (contexto RAG e intepretando o histórico de conversas o usuário manifestou claramente querer resgatar a informação)", name = "redirectToDB", returnDirect = false, resultConverter = DefaultToolCallResultConverter.class)
   protected OutputSchema.RetriveledData redirectToDB(@ToolParam(required = true) DBToolParam param) throws RedisException {
     return OutputSchema.RetriveledData.fromEntity(
       contentRepository.findById(param.resourceId()).orElseThrow(
