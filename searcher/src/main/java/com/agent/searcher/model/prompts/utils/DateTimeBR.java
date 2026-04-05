@@ -5,17 +5,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public record DateTime(
+public record DateTimeBR(
   String time
 ) {
-  public DateTime(
-    InnerDateTime innerDateTime
-  ) {
-    this(InnerDateTime.getTime());
-  }
-  public record InnerDateTime() {
-    
-    public static String getTime() {
+  public static String getTime() {
       ZoneId zone = ZoneId.of("America/Sao_Paulo");
 
     var localTime = ZonedDateTime.now(zone);
@@ -27,5 +20,4 @@ public record DateTime(
 
       return localTime.format(brFormat);
     }
-  }
 }

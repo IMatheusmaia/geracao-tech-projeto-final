@@ -2,10 +2,13 @@ package com.agent.searcher.model.client;
 
 import java.util.List;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.stereotype.Service;
-
 import com.agent.searcher.model.prompts.DynamicPrompts;
+import com.agent.searcher.model.schema.OutputSchema;
 import com.agent.searcher.model.tools.ChatModelTools;
 
 
@@ -14,24 +17,39 @@ public class ChatClientService {
   
   private final ChatClient chatClient;
   private final ChatModelTools tools;
+  private final MessageWindowChatMemory windowChatMemory;
 
   public ChatClientService(
       ChatClient chatClient,
-      ChatModelTools tools
+      ChatModelTools tools,
+      MessageWindowChatMemory windowChatMemory
   ) {
     this.chatClient = chatClient;
     this.tools = tools;
+    this.windowChatMemory = windowChatMemory;
   }
 
-  public String getResponse(DynamicPrompts prompt, List<Message> history) {
-     
-      return chatClient
-        .prompt()
-          .system(prompt.system())
-          .user(prompt.userMessage())
-          .messages(history)
-          .tools(tools)
-          .call().content();
+  public OutputSchema getResponse(String userMessage, String chatId) {
+    var systemPrompt = new DynamicPrompts().system();
+
+    List<Message> history = windowChatMemory.get(chatId);
+
+    var output = chatClient
+      .prompt()
+        .system(systemPrompt)
+        .user(userMessage)
+        .messages(history)
+        .tools(tools)
+        .advisors(
+          MessageChatMemoryAdvisor.builder(
+            windowChatMemory
+          ).build()
+        )
+        .call().entity(OutputSchema.class);
+    
+    windowChatMemory.add(chatId, new UserMessage(userMessage));
+
+    return output;
   }
   
 }

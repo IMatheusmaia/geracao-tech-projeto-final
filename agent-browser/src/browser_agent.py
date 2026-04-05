@@ -7,10 +7,12 @@ class NewsItem(BaseModel):
     title: str
     content: str
     pub_date: str
+    name_source: str | None
     url_source: str
 
 class NewsResult(BaseModel):
     items: list[NewsItem]
+    url_source: str
 
 class BrowserAgent:
 
