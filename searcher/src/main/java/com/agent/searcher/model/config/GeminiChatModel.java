@@ -36,7 +36,6 @@ public class GeminiChatModel {
             .model(ChatModel.GEMINI_2_5_FLASH)
             .temperature(0.5)
             .includeThoughts(false)
-            .outputSchema(OutputSchema.toJSONSchema())
             .build()
           )
           .build()

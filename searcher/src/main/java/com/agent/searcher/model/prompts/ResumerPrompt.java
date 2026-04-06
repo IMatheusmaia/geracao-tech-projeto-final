@@ -9,16 +9,16 @@ public record ResumerPrompt(String prompt) {
         Você receberá uma lista de notícias em formato JSON, seguindo a estrutura abaixo:
 
         [
-          {
-            news: [{
+          \\{
+            news: [\\{
               "title": "string",
               "content": "string",
               "pub_date": "string",
               "name_source": "string | null",
               "url_source": "string"
-            } ... ],
+            \\} ... ],
             url_source: "string"
-          }
+          \\}
 
           ...
         ]
@@ -41,10 +41,10 @@ public record ResumerPrompt(String prompt) {
 
         Responda EXCLUSIVAMENTE com um objeto JSON válido, sem texto adicional, sem blocos de código, sem explicações. O objeto deve ter exatamente esta estrutura:
 
-        {
+        \\{
           "title": "string",
           "content": "string"
-        }
+        \\}
 
         Onde:
         - "title": título principal do artigo consolidado, em português, que reflita o tema central das notícias

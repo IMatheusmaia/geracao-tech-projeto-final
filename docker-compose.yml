@@ -20,6 +20,7 @@ services:
     container_name: neo4j
     image: neo4j:5.26.24-ubi9
     ports:
-      - "9090:9090"
+      - "9090:7687"
+      - "7474:7474"
     environment:
       - NEO4J_AUTH=none
