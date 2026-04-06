@@ -7,7 +7,7 @@ from mcp.server.fastmcp import FastMCP
 
 logger = logging.getLogger("mcp_tools")
 
-mcp = FastMCP("Browser-Agent")
+mcp = FastMCP("Browser-Agent", host="0.0.0.0")
 
 
 @mcp.tool()

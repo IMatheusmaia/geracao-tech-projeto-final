@@ -6,17 +6,23 @@ services:
       dockerfile: .Dockerfile
     ports:
       - "8000:8000"
-    env_file:
-      - ./agent-browser/.env
-  
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - CHROMIUM_BIN_PATH=/usr/bin/chromium
+      - LOG_LEVEL=DEBUG
+    networks:
+      - app-network
+
   redis:
     container_name: redis
     image: redis/redis-stack:latest
     ports:
       - "6379:6379"
-      - "8001:8001"  # Redis Insight (UI web para inspecionar os dados)
+      - "8001:8001"
+    networks:
+      - app-network
 
-  chat-memory:
+  neo4j:
     container_name: neo4j
     image: neo4j:5.26.24-ubi9
     ports:
@@ -24,3 +30,42 @@ services:
       - "7474:7474"
     environment:
       - NEO4J_AUTH=none
+    networks:
+      - app-network
+
+  searcher:
+    container_name: searcher
+    build:
+      context: ./searcher
+      dockerfile: Dockerfile
+    ports:
+      - "3030:3030"
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - SPRING_AI_MCP_CLIENT_SSE_CONNECTIONS_SERVER1_URL=http://agent-browser:8000/sse
+      - SPRING_MCP_SERVER_URL=http://agent-browser:8000/sse
+      - SPRING_DATA_REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SPRING_NEO4J_URI=bolt://neo4j:7687
+    depends_on:
+      - redis
+      - neo4j
+      - agent-browser
+    networks:
+      - app-network
+
+  ui:
+    container_name: ui
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - searcher
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
