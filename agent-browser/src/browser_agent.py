@@ -10,44 +10,29 @@ from pydantic import BaseModel
 logger = logging.getLogger("browser_agent")
 
 
-class NewsItem(BaseModel):
-    title: str
-    content: str
-    pub_date: str
-    name_source: str | None
+class DishImage(BaseModel):
     url_source: str
 
-
-class NewsResult(BaseModel):
-    # Campo renomeado de 'items' para 'news' para compatibilidade com McpToolResultDTO (Java)
-    news: list[NewsItem]
-    url_source: str
-
+class ListImages(BaseModel):
+    images: list[DishImage]
 
 class BrowserAgent:
 
-    def __init__(self, task: str, site: str | None = None):
+    def __init__(self, task: str, dish: str | None = None):
         load_dotenv()
 
         self.task = task
-        self.site = site
+        self.site = dish
         self.api_key = getenv("GOOGLE_API_KEY")
 
-        logger.info("=" * 60)
-        logger.info("NOVA EXECUCAO DO BROWSER AGENT")
-        logger.info("=" * 60)
-        logger.info("[INPUT] Task recebida: %s", task)
-        logger.info("[INPUT] Site alvo: %s", site or "nenhum especificado")
-        logger.info("[INPUT] Timestamp: %s", datetime.now().isoformat())
 
         full_task = task
-        if site:
+        if dish:
             full_task = (
                 f"{task}\n\n"
-                f"Site alvo para busca: {site}\n"
-                f"Acesse exclusivamente este site para realizar a busca."
+                f"Prato alvo para busca: {dish}\n"
             )
-            logger.info("[INPUT] Task completa montada com site: %s", full_task)
+            logger.info("[INPUT] Descrição da task completa: %s", full_task)
 
         self.browser = Browser(
             headless=True,
@@ -72,7 +57,7 @@ class BrowserAgent:
             task=full_task,
             browser=self.browser,
             chat=self.model,
-            output_model_schema=NewsResult
+            output_model_schema=ListImages
         )
 
         logger.info("[INIT] Agente criado - modelo=gemini-2.5-pro, output_schema=NewsResult")
@@ -92,7 +77,7 @@ class BrowserAgent:
             raw_result = str(result)
             logger.debug("[RUN] Resultado bruto (primeiros 500 chars): %s", raw_result[:500])
 
-            structured = result.get_structured_output(NewsResult)
+            structured = result.get_structured_output(ListImages)
             logger.info("[RUN] Structured output obtido com sucesso")
 
             # Log detalhado de cada noticia capturada

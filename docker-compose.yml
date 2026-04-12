@@ -33,10 +33,10 @@ services:
     networks:
       - app-network
 
-  searcher:
-    container_name: searcher
+  agent-api:
+    container_name: agent-api
     build:
-      context: ./searcher
+      context: ./agent-api
       dockerfile: Dockerfile
     ports:
       - "3030:3030"
@@ -54,17 +54,17 @@ services:
     networks:
       - app-network
 
-  ui:
-    container_name: ui
-    build:
-      context: ./ui
-      dockerfile: Dockerfile
-    ports:
-      - "3000:80"
-    depends_on:
-      - searcher
-    networks:
-      - app-network
+  # ui:
+  #   container_name: ui
+  #   build:
+  #     context: ./ui
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:80"
+  #   depends_on:
+  #     - agent-api
+  #   networks:
+  #     - app-network
 
 networks:
   app-network:
