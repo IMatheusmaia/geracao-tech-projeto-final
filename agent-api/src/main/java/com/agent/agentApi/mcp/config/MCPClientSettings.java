@@ -26,7 +26,7 @@ public class MCPClientSettings {
   @Primary
   public McpSyncClient mcpSyncClient(HttpClientSseClientTransport transport) {
     return McpClient.sync(transport)
-    .requestTimeout(Duration.ZERO)
+    .requestTimeout(Duration.ofMinutes(15))
     .build();
   }
 

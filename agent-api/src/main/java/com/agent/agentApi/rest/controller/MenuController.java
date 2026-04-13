@@ -43,7 +43,6 @@ public class MenuController {
   }
 
   // === Chat ===
-
   @PostMapping("/chat")
   public void search(@RequestBody String request) {
     try {
@@ -54,7 +53,6 @@ public class MenuController {
   }
 
   // === Menu ===
-
   @GetMapping("/dish")
   public ResponseEntity<List<DishEntity>> listDishs() {
     return ResponseEntity.ok(dishService.findAllDishs());

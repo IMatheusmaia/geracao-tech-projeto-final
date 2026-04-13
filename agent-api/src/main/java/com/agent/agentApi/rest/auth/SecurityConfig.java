@@ -32,11 +32,13 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/api/v1/dish", "/api/v1/dish/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/dish/{id}/image-search").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/v1/dish", "/api/v1/dish/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/dish").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/v1/dish/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/dish/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/v1/dish/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .exceptionHandling(exceptions -> exceptions

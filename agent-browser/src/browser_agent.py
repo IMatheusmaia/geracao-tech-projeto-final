@@ -1,8 +1,6 @@
 import logging
-import json
 import traceback
-from datetime import datetime
-from browser_use import Agent, Browser, ChatGoogle
+from browser_use import Agent, Browser, ChatGoogle, Controller
 from dotenv import load_dotenv
 from os import getenv
 
@@ -15,8 +13,11 @@ class BrowserAgent:
         load_dotenv()
         self.api_key = getenv("GOOGLE_API_KEY")
 
+        controller = Controller(output_model=output)
+
         self.task = task
         self.output = output
+        self.controller = controller
         self.browser = Browser(
             headless=True,
             window_size={'width': 1024, 'height': 768},
@@ -26,8 +27,9 @@ class BrowserAgent:
             wait_for_network_idle_page_load_time=1.5,
             disable_security=True
         )
+        model_name = getenv("BROWSER_MODEL", "gemini-2.5-flash")
         self.model = ChatGoogle(
-                model="gemini-2.5-pro",
+                model=model_name,
                 temperature=0.6,
                 supports_structured_output=True,
                 api_key=self.api_key
@@ -36,6 +38,7 @@ class BrowserAgent:
         logger.info("[INIT] Browser configurado - headless=True, chromium_path_bin=%s", getenv("CHROMIUM_BIN_PATH"))
 
         self.agent = Agent(
+            max_steps=25,
             llm=self.model,
             task=self.task,
             browser=self.browser,
