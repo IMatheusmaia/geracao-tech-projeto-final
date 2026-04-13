@@ -6,6 +6,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.google.genai.GoogleGenAiChatModel;
 import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
 import org.springframework.ai.google.genai.GoogleGenAiChatModel.ChatModel;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -42,6 +43,21 @@ public class GeminiChatModel {
           .build()
     );
 	}
+
+  @Bean
+  @Qualifier("paramProvider")
+  public ChatClient paramProvider(GoogleGenAiChatModel.Builder builder) {
+    return ChatClient.create(
+      builder
+      .defaultOptions(
+        GoogleGenAiChatOptions.builder()
+        .model(ChatModel.GEMINI_2_5_FLASH)
+        .temperature(0.1)
+        .includeThoughts(false)
+        .build()
+      )
+      .build());
+  }
     
 
 }

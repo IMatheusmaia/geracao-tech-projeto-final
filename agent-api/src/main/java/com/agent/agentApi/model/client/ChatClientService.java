@@ -37,7 +37,7 @@ public class ChatClientService {
 
     String rawResponse = chatClient
       .prompt()
-        .system(new DynamicPrompts().system())
+        .system(DynamicPrompts.chatSysPrompt())
         .user(userMessage)
         .messages(history)
         .advisors(

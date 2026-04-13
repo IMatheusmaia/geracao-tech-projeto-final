@@ -3,6 +3,7 @@ package com.agent.agentApi.rest.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.agent.agentApi.rest.dto.request.DishRequest;
+import com.agent.agentApi.rest.dto.request.UpdateImageUrlRequest;
 import com.agent.agentApi.rest.entity.DishEntity;
 import com.agent.agentApi.rest.exception.ResourceNotFoundException;
 import com.agent.agentApi.rest.repository.DishRepository;
@@ -47,6 +48,15 @@ public class DishService {
     existing.setPrice(request.price());
     existing.setImageUrl(request.imageUrl());
     existing.setIngredients(request.ingredients());
+
+    return repository.save(existing);
+  }
+
+  public DishEntity updateImageUrl(String id, UpdateImageUrlRequest request) {
+    DishEntity existing = repository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Conteúdo não encontrado com id: " + id));
+
+    existing.setImageUrl(request.imageUrl());
 
     return repository.save(existing);
   }
